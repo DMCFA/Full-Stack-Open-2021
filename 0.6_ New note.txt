@@ -1,0 +1,12 @@
+title 0.6: New note
+
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+
+note over server:
+server sends a 201 code response
+end note
+
+note over browser:
+browser executes the event handler that creates the new note passed to the server as below
+{content: "sending", date: "2021-03-21T15:02:35.648Z"}, that renders new note to display
+end note

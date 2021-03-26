@@ -9,6 +9,11 @@ const FeedbackCounter = ({text, handleClick}) => <p style={{ display: 'inline-bl
 // a proper place to define a component
 const Statistics = ({good, neutral, bad}) => {
   let all = good+neutral+bad
+  
+  if (all === 0) {
+    return <p>No feedback given</p>
+  }
+
   return (
     <div>
       <FeedbackCounter text="good" handleClick={good} /> < br/>

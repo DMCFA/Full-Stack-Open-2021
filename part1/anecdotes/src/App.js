@@ -13,6 +13,7 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
   const n = anecdotes.length 
+
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Array(n).fill(0))
 
@@ -20,7 +21,7 @@ const App = () => {
     const getAnecdote = () => Math.floor(Math.random() * n)
     setSelected(getAnecdote)
   };
-  console.log(anecdote)
+
 
   const votes = () => {
     const copy = [...points]
@@ -28,15 +29,20 @@ const App = () => {
     setPoints(copy)
   }
 
-console.log(points)
+  const max = Math.max(...points)
 
+  const mostVotes = anecdotes[points.indexOf(max)]
 
   return (
     <div>
+      <h2>Anecdote of the day</h2>
       <p>{anecdotes[selected]}</p>
       <p>has {points[selected]} votes</p>
       <Button text="vote" value={votes} />
       <Button text="next anecdote" value={anecdote}/>
+      <h2>Anecdote with most votes</h2>
+      <p>{mostVotes}</p>
+      <p>has {max} votes</p>
     </div>
   )
 }

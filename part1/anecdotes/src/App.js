@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 
 const Button = ({value, text}) => <button onClick={value}>{text}</button>
 
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often',
@@ -11,15 +12,31 @@ const App = () => {
     'Premature optimization is the root of all evil.',
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
-   
+  const n = anecdotes.length 
   const [selected, setSelected] = useState(0)
-  const anecdote = anecdotes[Math.floor(Math.random() * anecdotes.length)]
+  const [points, setPoints] = useState(new Array(n).fill(0))
+
+  const anecdote = () => { 
+    const getAnecdote = () => Math.floor(Math.random() * n)
+    setSelected(getAnecdote)
+  };
+  console.log(anecdote)
+
+  const votes = () => {
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
+  }
+
+console.log(points)
 
 
   return (
     <div>
-      <p>{anecdote}</p>
-      <Button text="next anecdote" value={() => setSelected(selected + anecdote)}/>
+      <p>{anecdotes[selected]}</p>
+      <p>has {points[selected]} votes</p>
+      <Button text="vote" value={votes} />
+      <Button text="next anecdote" value={anecdote}/>
     </div>
   )
 }

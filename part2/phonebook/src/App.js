@@ -8,13 +8,16 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault();
-    const personObject = {
+    if (persons.some(e => e.name === newName)) {
+      alert(`${newName} is already added to phonebook`)
+  } else {
+      const personObject = {
       name: newName,
       id: newName
     }
     setPersons(persons.concat(personObject))
     setNewName('')
-  }
+  }}
 
   const changeName = (e) => {
     setNewName(e.target.value);
@@ -26,7 +29,7 @@ const App = () => {
         <li style={{listStyle: 'none'}}
         key={person.name}> {person.name}</li>
       ))};
-
+  
 
   return (
     <div>

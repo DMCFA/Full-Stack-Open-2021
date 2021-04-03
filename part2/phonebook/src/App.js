@@ -1,11 +1,17 @@
 import React, { useState } from 'react'
+import Filter from './components/filter'
 
 const App = () => {
   const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '040-1234567' }
+    { name: 'Arto Hellas', number: '040-1234567' },
+    { name: 'Mark James', number: '020-5764839' },
+    { name: 'Linda Darling', number: '044-7654321' },
+    { name: 'Romeo Kramer', number: '056-0192837' },
+    { name: 'Marlo Scott', number: '020-6622717' }
   ]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
+  const [ searchKey, setSearchKey ] = useState('')
 
   const addName = (e) => {
     e.preventDefault();
@@ -30,17 +36,25 @@ const App = () => {
     setNewNumber(e.target.value)
   }
 
-  const Person = ({persons}) => {
+  const changeSearch = (e) => {
+    setSearchKey(e.target.value)
+  }
+
+  const Person = () => {
     return (
-      persons.map( person =>
+      namesToShow.map( person =>
         <li style={{listStyle: 'none'}}
         key={person.name}> {person.name} {person.number}</li>
       ))};
   
+  const namesToShow = !searchKey ? persons : persons.filter
+  (person => person.name.toLowerCase().includes(searchKey.toLocaleLowerCase()));
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      < Filter searchKey={searchKey} changeSearch={changeSearch}/>
+      <h2>Add New</h2>
       <form onSubmit={addName}>
         <div>
           name: <input 
@@ -58,7 +72,7 @@ const App = () => {
       </form>
       <h2>Numbers</h2>
       <div>
-        <ul style={{paddingInlineStart: 0}}>
+        <ul style={{paddingInlineStart: 0, padding: '5px 0px'}}>
           <Person persons={persons} />
         </ul>
       </div>

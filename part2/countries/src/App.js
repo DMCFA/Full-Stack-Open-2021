@@ -1,34 +1,25 @@
 import React, {useState, useEffect} from 'react'
 import axios from 'axios'
+import Filter from './components/Filter'
+import Countries from './components/Countries'
 
-function App() {
+const App = () => {
   const [countries, setCountries] = useState([])
-  const [newCountry, setNewCountry] = useState([])
+  const [searchKey, setSearchKey] = useState('')
+  
 
   useEffect(() => {
-    axios
-      .get('https://restcountries.eu/rest/v2/all')
-      .then(response => {
-        setCountries(response)
-      })
-  }, [])
-  
-  const result = countries.data['name'].filter(country => country.toLowerCase().includes(newCountry.toLowerCase()))
-  console.log(result);
+    axios.get('https://restcountries.eu/rest/v2/all')
+    .then(res => setCountries(res.data)
+  )})
 
-  // console.log(countries);
-
-  const handleChange = (e) => setNewCountry(e.target.value)
-
+  const handleChange = (e) => setSearchKey(e.target.value)
+    
   return (
     <div>
-      find countries
-      <form /*onSubmit={addCountry}*/ style={{display: 'inline-block'}}>
-        <input value={newCountry}
-        onChange={handleChange}/>
-      </form>
+      <Filter handleChange={handleChange} searchKey={searchKey}/>
+      <Countries searchKey={searchKey} countries={countries}/>
     </div>
-  );
+  )
 }
-
-export default App;
+export default App

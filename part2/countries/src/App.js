@@ -14,11 +14,17 @@ const App = () => {
   )})
 
   const handleChange = (e) => setSearchKey(e.target.value)
+
+  const show = (e) => {
+    e.preventDefault()
+    setSearchKey(e.target.value)
+  }
+
     
   return (
     <div>
       <Filter handleChange={handleChange} searchKey={searchKey}/>
-      <Countries searchKey={searchKey} countries={countries}/>
+      <Countries searchKey={searchKey} countries={countries} show={show}/>
     </div>
   )
 }

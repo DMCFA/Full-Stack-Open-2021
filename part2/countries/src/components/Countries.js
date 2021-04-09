@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Countries = ({searchKey, countries}) => {
+const Countries = ({searchKey, countries, show}) => {
     const results = searchKey.length === 1 ? countries : countries.filter(country =>
     country.name.toLowerCase().indexOf(searchKey.toLowerCase()) > -1 )
 
@@ -10,9 +10,12 @@ const Countries = ({searchKey, countries}) => {
     } else if (results.length < 10 && results.length > 1) {
         return (
             results.map(country =>
-                <li style={{listStyle: 'none'}}
-                key={country.alpha3Code}>{country.name}</li>)
+                <li style={{listStyle: 'none', paddingTop: '10px'}}
+                key={country.alpha3Code}>{country.name}
+                <button style={{margin: '5px'}} value={country.name} onClick={show}>show</button></li>)
         )
+    } else if (results.length === 0) {
+        return <p>No matches found</p>
 
     } else if (results.length === 1) {
     
@@ -44,17 +47,3 @@ const Countries = ({searchKey, countries}) => {
 }
 
 export default Countries
-
-// const countriesToShow = search ? countries.filter((country) =>
-// country.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
-// )
-// : countries;
-
-    // const results = !searchKey ? countries : countries.filter
-    // (country => country.name.toLowerCase().includes(searchKey.toLowerCase()));
-    // return (
-    //     results.map(country => 
-    //         <li style={{listStyle: 'none'}}
-    //         key={country.alpha3Code}> {country.name}</li>
-    //             )
-    // )

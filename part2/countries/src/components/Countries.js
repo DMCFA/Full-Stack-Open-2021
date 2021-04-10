@@ -1,10 +1,15 @@
 import React from 'react'
+import Weather from './Weather'
 
 const Countries = ({searchKey, countries, show}) => {
+
     const results = searchKey.length === 1 ? countries : countries.filter(country =>
     country.name.toLowerCase().indexOf(searchKey.toLowerCase()) > -1 )
 
-    if (results.length >= 10) {
+    if (results.length === 0) {
+        return <p>No matches found</p>
+
+    } else if (results.length >= 10) {
         return <p>Too many matches, specify another filter</p>
 
     } else if (results.length < 10 && results.length > 1) {
@@ -14,8 +19,6 @@ const Countries = ({searchKey, countries, show}) => {
                 key={country.alpha3Code}>{country.name}
                 <button style={{margin: '5px'}} value={country.name} onClick={show}>show</button></li>)
         )
-    } else if (results.length === 0) {
-        return <p>No matches found</p>
 
     } else if (results.length === 1) {
     
@@ -37,9 +40,10 @@ const Countries = ({searchKey, countries, show}) => {
                 <img
                 src={country.flag}
                 alt='national flag'
-                width='250px'
-                height='200px'>
+                width='150px'
+                height='100px'>
                 </img>
+                <Weather capital={country.capital} />
                 </div>
             ))}
             </div>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/filter'
 import Person from './components/person'
 import Persons from './components/persons'
+import methodService from './services/methods'
 
 const App = () => {
   const [ persons, setPersons ] = useState([]) 
@@ -11,10 +11,10 @@ const App = () => {
   const [ searchKey, setSearchKey ] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response =>
-        setPersons(response.data)
+    methodService
+      .getAll()
+      .then(initialPersons =>
+        setPersons(initialPersons)
       )
   }, [])
 
@@ -28,10 +28,10 @@ const App = () => {
       number: newNumber,
       id: newName
     }
-    axios
-    .post('http://localhost:3001/persons', personObject)
-    .then(res => {
-    setPersons(persons.concat(res.data))
+    methodService
+    .create(personObject)
+    .then(returnedPerson => {
+    setPersons(persons.concat(returnedPerson))
     setNewName('')
     setNewNumber('')
     })

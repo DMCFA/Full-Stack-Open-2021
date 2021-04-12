@@ -20,14 +20,38 @@ const App = () => {
 
   const addName = (e) => {
     e.preventDefault();
-    if (persons.some(e => e.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-  } else {
       const personObject = {
       name: newName,
       number: newNumber,
       id: newName
     }
+
+    if (persons.some(e => e.name.toLowerCase() === newName.toLowerCase())) {
+      const confirm = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+
+      if (confirm) {
+        const personX = persons.find(i => i.name.toLowerCase() === newName.toLowerCase())
+        const changedPerson = { ...personX, number: personObject.number}
+    
+        methodService
+          .update(personX.id, changedPerson)
+          .then(() => {
+            setPersons(persons.map(i => i.id !== personX.id ? i : changedPerson))
+          })
+          .catch(error => {
+            alert (
+              `${personX.name} has already been deleted from the server`
+            )
+            setPersons(persons.filter(i=> i.id !== personX.id))
+          })
+        }
+
+        else {
+          setNewName('')
+          setNewNumber('')
+        }
+
+    } else {
     methodService
     .create(personObject)
     .then(returnedPerson => {

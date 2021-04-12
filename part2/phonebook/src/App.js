@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Filter from './components/filter'
 import Person from './components/person'
 import Persons from './components/persons'
+import Notification from './components/notification'
 import methodService from './services/methods'
 
 const App = () => {
@@ -9,6 +10,7 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchKey, setSearchKey ] = useState('')
+  const [Message, setMessage] = useState('')
 
   useEffect(() => {
     methodService
@@ -37,11 +39,22 @@ const App = () => {
           .update(personX.id, changedPerson)
           .then(() => {
             setPersons(persons.map(i => i.id !== personX.id ? i : changedPerson))
+            setNewName('')
+            setNewNumber('')
+            setMessage(
+              `Updated ${personX.name}`
+            )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
           })
           .catch(error => {
-            alert (
+            setMessage (
               `${personX.name} has already been deleted from the server`
             )
+            setTimeout(() => {
+              setMessage(null)
+            }, 5000)
             setPersons(persons.filter(i=> i.id !== personX.id))
           })
         }
@@ -58,6 +71,10 @@ const App = () => {
     setPersons(persons.concat(returnedPerson))
     setNewName('')
     setNewNumber('')
+    setMessage(`Added ${personObject.name}`)
+    setTimeout(()=> {
+      setMessage(null)
+    }, 5000)
     })
   }}
 
@@ -68,7 +85,8 @@ const App = () => {
         .removePerson(id)
         .then(() => setPersons(persons.filter((person) => person.id !== id)))
         .catch((error) => {
-          alert(`${person} has already been deleted from the server`)
+          setMessage((`${person} has already been deleted from the server`))
+          setTimeout(()=> {setMessage(null)}, 5000)
           setPersons(persons.filter((person) => person.id !== id))
         })
 
@@ -93,6 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={Message}/>
       < Filter searchKey={searchKey} changeSearch={changeSearch}/>
       <h3>Add New</h3>
       <Person addName={addName} newName={newName} changeName={changeName} newNumber={newNumber} changeNumber={changeNumber} />

@@ -37,6 +37,23 @@ const App = () => {
     })
   }}
 
+  const remove = (id, person) => {
+    const confirmDelete = window.confirm(`Delete ${person}?`);
+    if (confirmDelete) {
+      methodService
+        .removePerson(id)
+        .then(() => setPersons(persons.filter((person) => person.id !== id)))
+        .catch((error) => {
+          alert(`${person} has already been deleted from the server`)
+          setPersons(persons.filter((person) => person.id !== id))
+        })
+
+    } else {
+      return
+    }
+  }
+
+
   const changeName = (e) => {
     setNewName(e.target.value);
   }
@@ -56,7 +73,7 @@ const App = () => {
       <h3>Add New</h3>
       <Person addName={addName} newName={newName} changeName={changeName} newNumber={newNumber} changeNumber={changeNumber} />
       <h3>Numbers</h3>
-      <Persons persons={persons} searchKey={searchKey} />
+      <Persons persons={persons} searchKey={searchKey} remove={remove}/>
     </div>
   )
 }

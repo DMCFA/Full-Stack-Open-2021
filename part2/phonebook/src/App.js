@@ -3,6 +3,7 @@ import Filter from './components/filter'
 import Person from './components/person'
 import Persons from './components/persons'
 import Notification from './components/notification'
+import ErrorNotification from './components/error-notification'
 import methodService from './services/methods'
 
 const App = () => {
@@ -10,7 +11,8 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ searchKey, setSearchKey ] = useState('')
-  const [Message, setMessage] = useState('')
+  const [ message, setMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
 
   useEffect(() => {
     methodService
@@ -49,11 +51,10 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
-            setMessage (
-              `${personX.name} has already been deleted from the server`
-            )
+            setErrorMessage (
+              `${personX.name} has already been deleted from the server`)
             setTimeout(() => {
-              setMessage(null)
+              setErrorMessage(null)
             }, 5000)
             setPersons(persons.filter(i=> i.id !== personX.id))
           })
@@ -85,8 +86,8 @@ const App = () => {
         .removePerson(id)
         .then(() => setPersons(persons.filter((person) => person.id !== id)))
         .catch((error) => {
-          setMessage((`${person} has already been deleted from the server`))
-          setTimeout(()=> {setMessage(null)}, 5000)
+          setErrorMessage((`${person} has already been deleted from the server`))
+          setTimeout(()=> {setErrorMessage(null)}, 5000)
           setPersons(persons.filter((person) => person.id !== id))
         })
 
@@ -111,7 +112,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={Message}/>
+      <Notification message={message}/>
+      <ErrorNotification errorMessage={errorMessage}/>
       < Filter searchKey={searchKey} changeSearch={changeSearch}/>
       <h3>Add New</h3>
       <Person addName={addName} newName={newName} changeName={changeName} newNumber={newNumber} changeNumber={changeNumber} />

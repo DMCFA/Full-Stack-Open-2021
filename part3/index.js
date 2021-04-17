@@ -51,21 +51,16 @@ app.delete('/api/persons/:id', (request, response, next) => {
 //POST//
 app.post('/api/persons', (request, response, next) => {
     const body = request.body
-//     const personName = persons.map(person => person.name)
 
-//     if(!body.name) {
-//         return response.status(400).json({
-//             error: 'name is missing'
-//         })
-//     } else if (!body.number) {
-//         return response.status(400).json({
-//             error: 'number is missing'
-//         })
-//     } else if (personName.includes(body.name)) {
-//         return response.status(400).json({
-//             error: 'name must be unique'
-//     })
-// }
+    if(!body.name) {
+        return response.status(400).json({
+            error: 'name is missing'
+        })
+    } else if (!body.number) {
+        return response.status(400).json({
+            error: 'number is missing'
+        })
+}
 
     const person = new Person ({
         name: body.name,
@@ -78,6 +73,20 @@ app.post('/api/persons', (request, response, next) => {
     })
     .catch(error => next(error))
 });
+
+//UPDATE//
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedNote => response.json(updatedNote))
+    .catch(error => next(error))
+})
 
 //ERROR HANDLER//
 const errorHandler = (error, request, response, next) => {

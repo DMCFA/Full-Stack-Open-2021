@@ -14,29 +14,31 @@ morgan.token('body', (request, response) => JSON.stringify(request.body));
 
 app.use(morgan(':method :url :status :req[content-length] - :response-time ms  :body'));
 
+//GET//
+app.get('/info/', (request, response) => {
+    const entries = Person.length
+    const date = new Date ()
+    response.writeHead(200, { 'Content-Type': 'text/plain' })
+    response.end(`Phonebook has info for ${entries} people. ${date}`)
+});
 
-app.get('/api/persons/', (request, response) => {
+app.get('/api/persons/', (request, response, next) => {
     Person.find({})
     .then(persons => {
         response.json(persons)
     })
+    .catch(error => next(error))
 });
 
-
-app.get('/info/', (request, response) => {
-    const entries = persons.length
-    const date = new Date ()
-    response.writeHead(200, { 'Content-Type': 'text/plain' })
-    response.end(`Phonebook has info for ${entries} people. ${date}`)
-
-})
-
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     Person.findById(request.params.id)
     .then(persons => {
         response.json(persons)
     })
-})
+    .catch(error => next(error))
+});
+
+//DELETE//
 
 app.delete('/api/persons/:id', (request, response, next) => {
     Person.findByIdAndDelete(request.params.id)
@@ -46,7 +48,8 @@ app.delete('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 });
 
-app.post('/api/persons', (request, response) => {
+//POST//
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 //     const personName = persons.map(person => person.name)
 
@@ -73,6 +76,7 @@ app.post('/api/persons', (request, response) => {
     .then(savedPerson => {
         response.json(savedPerson)
     })
+    .catch(error => next(error))
 });
 
 //ERROR HANDLER//
@@ -91,4 +95,4 @@ app.use(errorHandler)
 PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-})
+});

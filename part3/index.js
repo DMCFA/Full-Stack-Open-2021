@@ -16,10 +16,11 @@ app.use(morgan(':method :url :status :req[content-length] - :response-time ms  :
 
 //GET//
 app.get('/info/', (request, response) => {
-    const entries = Person.length
+    Person.estimatedDocumentCount({}).then((entries) => {
     const date = new Date ()
     response.writeHead(200, { 'Content-Type': 'text/plain' })
     response.end(`Phonebook has info for ${entries} people. ${date}`)
+    })
 });
 
 app.get('/api/persons/', (request, response, next) => {

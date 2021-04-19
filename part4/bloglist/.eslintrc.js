@@ -3,7 +3,8 @@ module.exports = {
   'env': {
     'commonjs': true,
     'es2021': true,
-    'node': true
+    'node': true,
+    'jest': true
   },
   'extends': 'eslint:recommended',
   'parserOptions': {
@@ -27,5 +28,8 @@ module.exports = {
       'never'
     ],
     'no-console': 0,
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

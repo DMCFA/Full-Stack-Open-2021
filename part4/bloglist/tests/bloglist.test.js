@@ -27,6 +27,12 @@ test('get all blogs in json format', async () => {
     expect(res.body).toHaveLength(helper.blogs.length)
 })
 
+test('id property exists', async () => {
+    const res = await api.get('/api/blogs')
+
+    expect(res.body[0].id).toBeDefined()
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

@@ -50,7 +50,7 @@ test('a valid blog can be added', async () => {
     await api
         .post('/api/blogs')
         .send(newBlog)
-        .expect(201)
+        .expect(200)
         .expect('Content-Type', /application\/json/)
 
     const res = await helper.blogsInDb()
@@ -79,6 +79,24 @@ test('likes have a default value', async () => {
     const allBlogs = await helper.blogsInDb()
 
     expect(allBlogs[allBlogs.length -1].likes).toBe(0)
+})
+
+//NOTE IS NOT ADDED WITHOUT TITLE OR URL//
+
+test('title and url are required', async () => {
+    const incompleteBlog = {
+        author: "Bam Adebayo",
+        likes: 100
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(incompleteBlog)
+        .expect(400)
+    
+    const allBlogs = await helper.blogsInDb()
+    
+    expect(allBlogs).toHaveLength(helper.blogs.length)
 })
 
 

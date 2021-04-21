@@ -9,11 +9,7 @@ const Blog = require('../models/blog')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
-
-    for (let blog of helper.blogs) {
-        let blogObject = new Blog(blog)
-        await blogObject.save()
-    }
+    await Blog.insertMany(helper.blogs)
 })
 
 //GET ALL POSTS IN THE RIGHT FORMAT AND CONFIRM LENGTH IS CORRECT//
@@ -99,6 +95,18 @@ test('title and url are required', async () => {
     expect(allBlogs).toHaveLength(helper.blogs.length)
 })
 
+//DELETE POST//
+test('delete single blog post', async () => {
+    const allBlogs = await helper.blogsInDb()
+    const blogToDelete = allBlogs[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+
+    const blogsAfter = await helper.blogsInDb()
+    expect(blogsAfter).toHaveLength(helper.blogs.length -1)
+})
 
 afterAll(() => {
     mongoose.connection.close()

@@ -108,6 +108,24 @@ test('delete single blog post', async () => {
     expect(blogsAfter).toHaveLength(helper.blogs.length -1)
 })
 
+//UPDATE LIKES//
+test('update likes on a blog post', async () => {
+    const allBlogs = await helper.blogsInDb()
+    const blogToUpdate = allBlogs[0]
+
+    const likes = {
+        likes: 1000
+    }
+
+    await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(likes)
+        .expect(200)
+
+    const blogsAfter = await helper.blogsInDb()
+    expect(blogsAfter[0].likes).toBe(1000)
+})
+
 afterAll(() => {
     mongoose.connection.close()
 })

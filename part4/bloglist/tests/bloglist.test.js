@@ -16,6 +16,8 @@ beforeEach(async () => {
     }
 })
 
+//GET ALL POSTS IN THE RIGHT FORMAT AND CONFIRM LENGTH IS CORRECT//
+
 test('get all blogs in json format', async () => {
     await api
     .get('/api/blogs')
@@ -27,13 +29,17 @@ test('get all blogs in json format', async () => {
     expect(res.body).toHaveLength(helper.blogs.length)
 })
 
+//CONFIRM ID PROPERTY HAS THE CORRECT NAMING//
+
 test('id property exists', async () => {
     const res = await api.get('/api/blogs')
 
     expect(res.body[0].id).toBeDefined()
 })
 
-test('a valid note can be added', async () => {
+//MAKE A POST REQUEST//
+
+test('a valid blog can be added', async () => {
     const newBlog = {
         title: 'API Test Blog',
         author: 'Duarte Almeida',
@@ -55,6 +61,26 @@ test('a valid note can be added', async () => {
         'API Test Blog'
     )
 })
+
+//LIKES PROPERTY ADDED AND DEFAULTED TO ZERO IF NOT ADDED//
+
+test('likes have a default value', async () => {
+    const newBlog = {
+        title: 'Likes Blog',
+        author: 'Tom Uber',
+        url: 'http://reddit.com'
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(200)
+
+    const allBlogs = await helper.blogsInDb()
+
+    expect(allBlogs[allBlogs.length -1].likes).toBe(0)
+})
+
 
 afterAll(() => {
     mongoose.connection.close()

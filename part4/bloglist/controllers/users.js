@@ -11,6 +11,10 @@ usersRouter.post('/', async (req, res) => {
         return res.status(400).json({ error: 'Password must have a minimum of 3 characters' })
     } else if (!body.password || body.password === '') {
         return res.status(400).json({ error: 'Password not defined' })
+    } else if(body.username && body.username.length < 3) {
+        return res.status(400).json({ error: 'Username must have a minimum of 3 characters' })
+    } else if (!body.username || body.username === '') {
+        return res.status(400).json({ error: 'Username not defined' })
     }
 
     const saltRounds = 10

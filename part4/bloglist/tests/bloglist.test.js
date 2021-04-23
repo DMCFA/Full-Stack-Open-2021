@@ -16,9 +16,9 @@ beforeEach(async () => {
 
 test('get all blogs in json format', async () => {
     await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+        .get('/api/blogs')
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
 
     const res = await api.get('/api/blogs')
 
@@ -81,7 +81,7 @@ test('likes have a default value', async () => {
 
 test('title and url are required', async () => {
     const incompleteBlog = {
-        author: "Bam Adebayo",
+        author: 'Bam Adebayo',
         likes: 100
     }
 

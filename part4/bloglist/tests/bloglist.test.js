@@ -36,15 +36,19 @@ test('id property exists', async () => {
 //MAKE A POST REQUEST//
 
 test('a valid blog can be added', async () => {
+    const token = await helper.newUser()
+
     const newBlog = {
         title: 'API Test Blog',
         author: 'Duarte Almeida',
         url: 'http://gooogle.com',
-        likes: 23
+        likes: 23,
+        userId: '60856b16c520bc28b4f98e1d'
     }
 
     await api
         .post('/api/blogs')
+        .set('Authorization', `Bearer${token}`)
         .send(newBlog)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -56,6 +60,28 @@ test('a valid blog can be added', async () => {
     expect(content).toContain(
         'API Test Blog'
     )
+})
+
+//BLOG FAILS WITHOUT TOKEN//
+
+test('blog fails with the proper status code 401', async () => {
+    const newBlog = {
+        title: 'API Test Blog',
+        author: 'Duarte Almeida',
+        url: 'http://gooogle.com',
+        likes: 23,
+        userId: '60856b16c520bc28b4f98e1d'
+    }
+
+    await api
+        .post('/api/blogs')
+        .set('Authorization', 'Bearer ')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/)
+
+    const res = await helper.blogsInDb()
+    expect(res).toHaveLength(helper.blogs.length)
 })
 
 //LIKES PROPERTY ADDED AND DEFAULTED TO ZERO IF NOT ADDED//

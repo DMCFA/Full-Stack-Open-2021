@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Add from './components/Add'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+
+  const [newTitle, setNewTitle] = useState('')
+  const [newAuthor, setNewAuthor] = useState('')
+  const [newUrl, setNewUrl] = useState('')
+
   const [errorMessage, setErrorMessage] = useState(null)
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -21,6 +28,7 @@ const App = () => {
     if(loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
+      blogService.setToken(user.token)
     }
   }, [])
 
@@ -35,7 +43,8 @@ const App = () => {
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
       )
-
+      
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -52,6 +61,27 @@ const App = () => {
     setUser(null)
   }
 
+  const addBlog = (e) => {
+    e.preventDefault()
+    const blogObject = {
+      title: newTitle,
+      author: newAuthor,
+      url: newUrl
+    }
+    
+    blogService
+      .create(blogObject)
+      .then(blog => {
+        setBlogs(blogs.concat(blog))
+        setNewTitle('')
+        setNewUrl('')
+        setNewAuthor('')
+      })
+  }
+
+  const titleChange = (e) => setNewTitle(e.target.value)
+  const authorChange = (e) => setNewAuthor(e.target.value)
+  const urlChange = (e) => setNewUrl(e.target.value)
 
   if (user === null) {
     return (
@@ -87,6 +117,8 @@ const App = () => {
       <h2>{errorMessage}</h2>
       <h2>blogs</h2>
       <p>{user.name} logged in <button type="submit" onClick={logout}>logout</button></p>
+      <h2>create new</h2>
+      <Add addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} titleChange={titleChange} authorChange={authorChange} urlChange={urlChange} />
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}

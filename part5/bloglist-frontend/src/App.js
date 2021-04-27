@@ -1,17 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Notification from './components/Notification'
 import Blog from './components/Blog'
-import Add from './components/Add'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
 
   const [message, setMessage] = useState(null)
 
@@ -66,45 +62,20 @@ const App = () => {
     setUser(null)
   }
 
-  const addBlog = (e) => {
-    e.preventDefault()
-    const blogObject = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
+  const addBlog = (blogObject) => {
     
     blogService
       .create(blogObject)
       .then(blog => {
         setBlogs(blogs.concat(blog))
-        setNewTitle('')
-        setNewUrl('')
-        setNewAuthor('')
-        setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
       })
   }
 
   const blogForm = () => (
     <Togglable buttonLabel='add blog'>
-      <Add
-        addBlog={addBlog} 
-        newTitle={newTitle} 
-        newAuthor={newAuthor} 
-        newUrl={newUrl} 
-        titleChange={titleChange} 
-        authorChange={authorChange} 
-        urlChange={urlChange}
-      />
+      <BlogForm createBlog={addBlog}/>
     </Togglable>
   )
-
-  const titleChange = (e) => setNewTitle(e.target.value)
-  const authorChange = (e) => setNewAuthor(e.target.value)
-  const urlChange = (e) => setNewUrl(e.target.value)
 
   if (user === null) {
     return (
@@ -141,7 +112,6 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={message}/>
       <p>{user.name} logged in <button type="submit" onClick={logout}>logout</button></p>
-      <h2>create new</h2>
       {blogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />

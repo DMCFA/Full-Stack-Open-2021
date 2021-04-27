@@ -15,6 +15,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  //useEffect
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -29,6 +31,8 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  //Login & Logout
 
   const handleLogin = async (e) => {
     e.preventDefault()

@@ -24,7 +24,7 @@ const Blog = ({blog, updateBlog}) => {
     const updateLikes = blog
     updateLikes.likes ++
     updateBlog(updateLikes)
-    setLikes(likes + 1)
+    setLikes(likes+1)
   }
 
   return (

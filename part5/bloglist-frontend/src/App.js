@@ -19,7 +19,7 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs(blogs)
     )  
   }, [])
 
@@ -138,8 +138,10 @@ const App = () => {
       <Notification message={message}/>
       <p>{user.name} logged in <button type="submit" onClick={logout}>logout</button></p>
       {blogForm()}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+      {blogs
+      .sort((a, b) => (a.likes > b.likes) ? -1 : 1)
+      .map(blog =>
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
       )}
     </div>
   )

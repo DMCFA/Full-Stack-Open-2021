@@ -4,6 +4,7 @@ import Blog from './components/Blog'
 import Add from './components/Add'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -60,13 +61,6 @@ const App = () => {
     }
   }
 
-  // const errorMessage = newMessage => {
-  //   setMessage(newMessage)
-  //   setTimeout(() => {
-  //     setMessage(null)
-  //   }, 5000)
-  // }
-
   const logout = () => {
     window.localStorage.removeItem('loggedUser')
     setUser(null)
@@ -93,6 +87,20 @@ const App = () => {
         }, 5000)
       })
   }
+
+  const blogForm = () => (
+    <Togglable buttonLabel='add blog'>
+      <Add
+        addBlog={addBlog} 
+        newTitle={newTitle} 
+        newAuthor={newAuthor} 
+        newUrl={newUrl} 
+        titleChange={titleChange} 
+        authorChange={authorChange} 
+        urlChange={urlChange}
+      />
+    </Togglable>
+  )
 
   const titleChange = (e) => setNewTitle(e.target.value)
   const authorChange = (e) => setNewAuthor(e.target.value)
@@ -134,7 +142,7 @@ const App = () => {
       <Notification message={message}/>
       <p>{user.name} logged in <button type="submit" onClick={logout}>logout</button></p>
       <h2>create new</h2>
-      <Add addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} titleChange={titleChange} authorChange={authorChange} urlChange={urlChange} />
+      {blogForm()}
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}

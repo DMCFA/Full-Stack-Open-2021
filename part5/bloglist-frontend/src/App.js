@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import Notification from './components/Notification'
 import Blog from './components/Blog'
 import Add from './components/Add'
 import blogService from './services/blogs'
@@ -11,7 +12,7 @@ const App = () => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
 
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -44,17 +45,27 @@ const App = () => {
         'loggedUser', JSON.stringify(user)
       )
       
-      blogService.setToken(user.token)
+      blogService
+      .setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
-    } catch(exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setMessage(null)
+
+    } catch (exception) {
+        setMessage('Wrong credentials')
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
     }
   }
+
+  // const errorMessage = newMessage => {
+  //   setMessage(newMessage)
+  //   setTimeout(() => {
+  //     setMessage(null)
+  //   }, 5000)
+  // }
 
   const logout = () => {
     window.localStorage.removeItem('loggedUser')
@@ -76,6 +87,10 @@ const App = () => {
         setNewTitle('')
         setNewUrl('')
         setNewAuthor('')
+        setMessage(`a new blog ${newTitle} by ${newAuthor} added`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
   }
 
@@ -87,6 +102,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={message}/>
         <form onSubmit={handleLogin}>
           <div>
             username
@@ -114,8 +130,8 @@ const App = () => {
   
   return (
     <div>
-      <h2>{errorMessage}</h2>
       <h2>blogs</h2>
+      <Notification message={message}/>
       <p>{user.name} logged in <button type="submit" onClick={logout}>logout</button></p>
       <h2>create new</h2>
       <Add addBlog={addBlog} newTitle={newTitle} newAuthor={newAuthor} newUrl={newUrl} titleChange={titleChange} authorChange={authorChange} urlChange={urlChange} />

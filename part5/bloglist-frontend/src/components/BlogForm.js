@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
 const BlogForm = ({ createBlog }) => {
@@ -24,32 +24,32 @@ const BlogForm = ({ createBlog }) => {
     setNewAuthor('')
   }
 
-    return (
-      <div>
-        <h2>create new blog</h2>
-        <form onSubmit={addBlog}>
-          <div>
+  return (
+    <div>
+      <h2>create new blog</h2>
+      <form onSubmit={addBlog}>
+        <div>
             title: <input
             value={newTitle}
             onChange={titleChange}/>
-          </div>
-          <div>
+        </div>
+        <div>
             author: <input
             value={newAuthor}
             onChange={authorChange}/>
-          </div>
-          <div>
+        </div>
+        <div>
             url: <input
             value={newUrl}
             onChange={urlChange}/>
-          </div>
-          <div>
-            <button type='submit'>create</button>
-          </div>
-        </form>
-      </div>
-    )
-  }
+        </div>
+        <div>
+          <button type='submit'>create</button>
+        </div>
+      </form>
+    </div>
+  )
+}
 
 BlogForm.propTypes = {
   createBlog: PropTypes.func.isRequired,

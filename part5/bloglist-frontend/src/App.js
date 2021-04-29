@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 import React, { useState, useEffect } from 'react'
 import Notification from './components/Notification'
 import Blog from './components/Blog'
@@ -20,7 +21,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs)
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -45,19 +46,19 @@ const App = () => {
       window.localStorage.setItem(
         'loggedUser', JSON.stringify(user)
       )
-      
+
       blogService
-      .setToken(user.token)
+        .setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
       setMessage(null)
 
     } catch (exception) {
-        setMessage('Wrong credentials')
-        setTimeout(() => {
-          setMessage(null)
-        }, 5000)
+      setMessage('Wrong credentials')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     }
   }
 
@@ -69,7 +70,7 @@ const App = () => {
   //Add Blog
 
   const addBlog = (blogObject) => {
-    
+
     blogService
       .create(blogObject)
       .then(blog => {
@@ -97,24 +98,24 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
-  }
-}
-
-//Delete
-
-const deleteBlog = async (blog) => {
-  window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
-  if (window.confirm)
-    try {
-      await blogService.remove(blog.id)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
-    } catch (exception) {
-      setMessage(`Error updating blog ${blog.title}`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
     }
-}
+  }
+
+  //Delete
+
+  const deleteBlog = async (blog) => {
+    window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)
+    if (window.confirm)
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+      } catch (exception) {
+        setMessage(`Error updating blog ${blog.title}`)
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      }
+  }
 
   //Log in form
 
@@ -147,7 +148,7 @@ const deleteBlog = async (blog) => {
       </div>
     )
   }
-  
+
   return (
     <div>
       <h2>blogs</h2>
@@ -155,10 +156,10 @@ const deleteBlog = async (blog) => {
       <p>{user.name} logged in <button type="submit" onClick={logout}>logout</button></p>
       {blogForm()}
       {blogs
-      .sort((a, b) => (a.likes > b.likes) ? -1 : 1)
-      .map(blog =>
-        <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
-      )}
+        .sort((a, b) => (a.likes > b.likes) ? -1 : 1)
+        .map(blog =>
+          <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
+        )}
     </div>
   )
 }

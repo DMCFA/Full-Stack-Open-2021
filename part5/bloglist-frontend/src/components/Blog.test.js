@@ -1,8 +1,7 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
-import {prettyDOM} from '@testing-library/dom'
 
 describe ('</Blog />', () => {
 	const blog = {
@@ -21,5 +20,17 @@ describe ('</Blog />', () => {
 		expect(component.container).toHaveTextContent('renders title and author')
 		expect(component.container).toHaveTextContent('Duarte Almeida')
 		expect(div).toHaveStyle('display: none')
+	})
+
+	test('url and likes are shown when button is clicked', () => {
+		const component = render(
+			<Blog blog={blog} />
+		)
+
+		const btn = component.getByText('view')
+		fireEvent.click(btn)
+
+		expect(component.container).toHaveTextContent('http://abc.com')
+		expect(component.container).toHaveTextContent('likes')
 	})
 })

@@ -11,6 +11,8 @@ describe ('</Blog />', () => {
 		likes: 20
 	}
 
+	const mockHandler = jest.fn()
+
 	test('blog renders title and author only', () => {
 		const component = render(
 			<Blog blog={blog}  />)
@@ -32,5 +34,17 @@ describe ('</Blog />', () => {
 
 		expect(component.container).toHaveTextContent('http://abc.com')
 		expect(component.container).toHaveTextContent('likes')
+	})
+
+	test('event handler is called twice', () => {
+		const component = render(
+			<Blog blog={blog} updateBlog={mockHandler} />
+		)
+
+		const btn = component.getByText('like')
+		fireEvent.click(btn)
+		fireEvent.click(btn)
+
+		expect(mockHandler.mock.calls).toHaveLength(2)
 	})
 })

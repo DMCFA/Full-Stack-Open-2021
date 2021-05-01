@@ -30,16 +30,19 @@ const BlogForm = ({ createBlog }) => {
 			<form onSubmit={addBlog}>
 				<div>
             title: <input
+						id='title'
 						value={newTitle}
 						onChange={titleChange}/>
 				</div>
 				<div>
             author: <input
+						id='author'
 						value={newAuthor}
 						onChange={authorChange}/>
 				</div>
 				<div>
             url: <input
+						id='url'
 						value={newUrl}
 						onChange={urlChange}/>
 				</div>
@@ -53,13 +56,13 @@ const BlogForm = ({ createBlog }) => {
 
 BlogForm.propTypes = {
 	createBlog: PropTypes.func.isRequired,
-	addBlog: PropTypes.func.isRequired,
-	newTitle: PropTypes.string.isRequired,
-	titleChange: PropTypes.func.isRequired,
-	newAuthor: PropTypes.string.isRequired,
-	authorChange: PropTypes.func.isRequired,
-	newUrl: PropTypes.string.isRequired,
-	urlChange: PropTypes.func.isRequired
+// 	addBlog: PropTypes.func.isRequired,
+// 	newTitle: PropTypes.string.isRequired,
+// 	titleChange: PropTypes.func.isRequired,
+// 	newAuthor: PropTypes.string.isRequired,
+// 	authorChange: PropTypes.func.isRequired,
+// 	newUrl: PropTypes.string.isRequired,
+// 	urlChange: PropTypes.func.is
 }
 
 export default BlogForm

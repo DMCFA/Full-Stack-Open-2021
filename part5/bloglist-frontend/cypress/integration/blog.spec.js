@@ -75,6 +75,7 @@ describe('Blog app', function() {
 					cy.get('#username').type('Dinai')
 					cy.get('#password').type('test123')
 					cy.get('#login-btn').click()
+
 					cy.get('.head')
 						.should('be.visible')
 						.should('contain', 'cypress blog')
@@ -117,6 +118,41 @@ describe('Blog app', function() {
 					cy.get('div.message')
 						.should('be.visible')
 						.should('contain', 'Error updating blog')		
+				})
+				it.only('Blogs are ordered according to likes', function() {
+					//CREATE BLOGS
+					cy.createBlog({
+						title: 'machine learning',
+						author: 'Rob',
+						url: 'http://saturn.com'
+					})
+					cy.createBlog({
+						title: 'python',
+						author: 'Lars',
+						url: 'http://international.org'
+					})
+
+					//LOGIN MANUALLY
+					cy.get('#username').type('Dinai')
+					cy.get('#password').type('test123')
+					cy.get('#login-btn').click()
+
+					//ADDING LIKES
+					cy.get('.head').should('be.visible')
+					cy.get('.toggleBtn').click({ multiple: true })
+						.get('#like').click()
+					cy.contains('machine learning').as('ml')
+					cy.get('@ml').parent().contains('like').click()
+					cy.get('@ml').click({ timeout: 3000 })
+					cy.get('@ml').parent().contains('like').click()
+					cy.get('@ml').click({ timeout: 5000 })
+
+					//CONFIRM 2ND BLOG IS NOW 1ST IN THE LIST
+					cy.get('.head').should((blog) => {
+						expect(blog[0]).to.contain.text('machine learning')
+						expect(blog[1]).to.contain.text('cypress blog')
+						expect(blog[2]).to.contain.text('python')
+					})
 				})
 			})
 		})

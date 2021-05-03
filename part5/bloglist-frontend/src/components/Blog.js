@@ -40,7 +40,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
 			</div>
 			<div style={showWhenVisible} className='remainingDivs'>
 				{blog.url} <br />
-				likes {blog.likes} <button onClick={addLikes}>like</button> <br />
+				likes {blog.likes} <button id='like' onClick={addLikes}>like</button> <br />
 				{blog.author} <br />
 				<button onClick={removeBlog}>remove</button>
 			</div>

@@ -155,7 +155,7 @@ const App = () => {
 		<div>
 			<h2>blogs</h2>
 			<Notification message={message}/>
-			<p>{user.name} logged in <button type="submit" onClick={logout}>logout</button></p>
+			<p>{user.name} logged in <button id='logout' type="submit" onClick={logout}>logout</button></p>
 			{blogForm()}
 			{blogs
 				.sort((a, b) => (a.likes > b.likes) ? -1 : 1)

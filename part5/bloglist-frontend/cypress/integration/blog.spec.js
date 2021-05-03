@@ -31,5 +31,24 @@ describe('Blog app', function() {
 				.should('contain', 'Wrong credentials')
 				.and('have.css', 'background', 'rgb(211, 211, 211) none repeat scroll 0% 0% / auto padding-box border-box')
 		})
+		describe('When logged in', function() {
+			beforeEach(function() {
+				cy.get('#username').type('Dinai')
+				cy.get('#password').type('test123')
+				cy.get('#login-btn').click()
+			})
+
+			it('A blog can be created', function() {
+				cy.get('#addBlog').click()
+				cy.get('#title').type('cypress')
+				cy.get('#author').type('Dinai')
+				cy.get('#url').type('http://saturn.com')
+				cy.get('#create').click()
+				cy.get('.head')
+					.should('be.visible')
+					.should('contain', 'cypress')
+					.should('contain', 'Dinai')
+			})
+		})
 	})
 })

@@ -9,7 +9,7 @@ const anecdotesAtStart = [
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
-const asObject = (anecdote) => {
+export const asObject = (anecdote) => {
   return {
     content: anecdote,
     id: getId(),
@@ -20,17 +20,20 @@ const asObject = (anecdote) => {
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
-  if (action.type === 'VOTE') {
-    const id = action.data.id
-    const anectode = state.find(n => n.id === id)
-    const changedAnectode = {
-      ...anectode,
-      votes: anectode.votes + 1
+  switch (action.type) {
+    case 'VOTE':
+      const id = action.data.id
+      const anectode = state.find(n => n.id === id)
+      const changedAnectode = {
+        ...anectode,
+        votes: anectode.votes + 1
+      }
+      return state.map(n => n.id !== id ? n : changedAnectode)
+    case 'NEW_ANECDOTE':
+      return [...state, action.data]
+    default: 
+      return state
     }
-    return state.map(n => n.id !== id ? n : changedAnectode)
-      
-  }
-  return state
 }
 
 

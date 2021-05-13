@@ -33,14 +33,14 @@ export const initializeAnecdotes = () => {
 const anecdotesReducer = (state = [], action) => {
   switch (action.type) {
     case 'VOTE':
-      const id = action.data.id
-      const anectode = state.find(n => n.id === id)
-      const changedAnectode = {
-        ...anectode,
-        votes: anectode.votes + 1
-      }
-      const results = state.map(n => n.id !== id ? n : changedAnectode)
-      return results.sort((a, b) => (a.votes > b.votes) ? -1 : 1)
+      const changedAnecdote = state.map((anecdote) =>
+      anecdote.id !== action.data.id
+      ? anecdote
+      : {
+        ...anecdote,
+        votes: anecdote.votes++
+      })
+      return changedAnecdote.sort((a, b) => (a.votes > b.votes) ? -1 : 1)
     case 'NEW_ANECDOTE':
       return [...state, action.data]
     case 'INIT_ANECDOTES':

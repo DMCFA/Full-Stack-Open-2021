@@ -38,7 +38,7 @@ const anecdotesReducer = (state = [], action) => {
       ? anecdote
       : {
         ...anecdote,
-        votes: anecdote.votes++
+        votes: anecdote.votes + 1
       })
       return changedAnecdote.sort((a, b) => (a.votes > b.votes) ? -1 : 1)
     case 'NEW_ANECDOTE':

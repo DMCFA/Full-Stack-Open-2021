@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -8,12 +9,16 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import storage from './utils/storage'
 
+import { addNotification } from './reducers/notificationReducer'
+
 const App = () => {
+	const dispatch = useDispatch()
+
 	const [blogs, setBlogs] = useState([])
 	const [user, setUser] = useState(null)
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
-	const [notification, setNotification] = useState(null)
+	const notification = useSelector(state => state.notification)
 
 	const blogFormRef = React.createRef()
 
@@ -29,12 +34,7 @@ const App = () => {
 	}, [])
 
 	const notifyWith = (message, type='success') => {
-		setNotification({
-			message, type
-		})
-		setTimeout(() => {
-			setNotification(null)
-		}, 5000)
+		dispatch(addNotification(message, type))
 	}
 
 	const handleLogin = async (event) => {
@@ -138,7 +138,6 @@ const App = () => {
 					blog={blog}
 					handleLike={handleLike}
 					handleRemove={handleRemove}
-					own={user.username===blog.user.username}
 				/>
 			)}
 		</div>

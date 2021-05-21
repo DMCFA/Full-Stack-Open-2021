@@ -10,11 +10,12 @@ import loginService from './services/login'
 import storage from './utils/storage'
 
 import { addNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = () => {
 	const dispatch = useDispatch()
 
-	const [blogs, setBlogs] = useState([])
+	const blogs = useSelector(state => state.blogs)
 	const [user, setUser] = useState(null)
 	const [username, setUsername] = useState('')
 	const [password, setPassword] = useState('')
@@ -23,10 +24,8 @@ const App = () => {
 	const blogFormRef = React.createRef()
 
 	useEffect(() => {
-		blogService.getAll().then(blogs =>
-			setBlogs(blogs)
-		)
-	}, [])
+		dispatch(initializeBlogs())
+	}, [dispatch])
 
 	useEffect(() => {
 		const user = storage.loadUser()
@@ -54,22 +53,11 @@ const App = () => {
 		}
 	}
 
-	const createBlog = async (blog) => {
-		try {
-			const newBlog = await blogService.create(blog)
-			blogFormRef.current.toggleVisibility()
-			setBlogs(blogs.concat(newBlog))
-			notifyWith(`a new blog '${newBlog.title}' by ${newBlog.author} added!`)
-		} catch(exception) {
-			console.log(exception)
-		}
-	}
-
 	const handleLike = async (id) => {
 		const blogToLike = blogs.find(b => b.id === id)
 		const likedBlog = { ...blogToLike, likes: blogToLike.likes + 1, user: blogToLike.user.id }
 		await blogService.update(likedBlog)
-		setBlogs(blogs.map(b => b.id === id ?  { ...blogToLike, likes: blogToLike.likes + 1 } : b))
+		return blogs.map(b => b.id === id ?  { ...blogToLike, likes: blogToLike.likes + 1 } : b)
 	}
 
 	const handleRemove = async (id) => {
@@ -77,7 +65,7 @@ const App = () => {
 		const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
 		if (ok) {
 			await blogService.remove(id)
-			setBlogs(blogs.filter(b => b.id !== id))
+			return blogs.filter(b => b.id !== id)
 		}
 	}
 
@@ -129,7 +117,7 @@ const App = () => {
 			</p>
 
 			<Togglable buttonLabel='create new blog'  ref={blogFormRef}>
-				<NewBlog createBlog={createBlog} />
+				<NewBlog notifyWith={notifyWith} />
 			</Togglable>
 
 			{blogs.sort(byLikes).map(blog =>

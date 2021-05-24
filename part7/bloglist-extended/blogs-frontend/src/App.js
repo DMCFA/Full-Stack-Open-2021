@@ -5,6 +5,8 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import NewBlog from './components/NewBlog'
 import Users from './components/Users'
+import User from './components/User'
+import Login from './components/Login'
 
 import storage from './utils/storage'
 
@@ -13,7 +15,7 @@ import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setUser, logoutUser } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
 
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, useRouteMatch } from 'react-router-dom'
 
 const App = () => {
 	const dispatch = useDispatch()
@@ -58,45 +60,53 @@ const App = () => {
 		storage.logoutUser()
 	}
 
+	const findUser = useRouteMatch('/users/:id')
+	const userId = findUser
+		? users.find(user => user.id === findUser.params.id)
+		: null
+
 	const byLikes = (b1, b2) => b2.likes - b1.likes
 
 	return (
-
-		<Switch>
-
-			<Route path='/users'>
-				<h2>blogs</h2>
-				<p>
-					{user.name} logged in <button onClick={handleLogout}>logout</button>
-				</p>
-				<Users users={users} />
-			</Route>
-
-			<Route path='/'>
+		<>
+			{!user ?
+				<Login notification={notification}
+				/> :
 				<div>
-					<h2>blogs</h2>
+					<div>
+						<h2>blogs</h2>
+						<Notification notification={notification} />
+						<p>
+							{user.name} logged in <button onClick={handleLogout}>logout</button>
+						</p>
+					</div>
+					<Switch>
+						<Route path='/users/:id'>
+							<User user={userId} />
+						</Route>
 
-					<Notification notification={notification} />
+						<Route path='/users'>
+							<Users users={users} />
+						</Route>
 
-					<p>
-						{user.name} logged in <button onClick={handleLogout}>logout</button>
-					</p>
+						<Route path='/'>
+							<Togglable buttonLabel='create new blog' ref={blogFormRef}>
+								<NewBlog notifyWith={notifyWith} />
+							</Togglable>
 
-					<Togglable buttonLabel='create new blog' ref={blogFormRef}>
-						<NewBlog notifyWith={notifyWith} />
-					</Togglable>
-
-					{blogs.sort(byLikes).map(blog =>
-						<Blog
-							key={blog.id}
-							blog={blog}
-							handleLike={handleLike}
-							handleRemove={handleRemove}
-						/>
-					)}
+							{blogs.sort(byLikes).map(blog =>
+								<Blog
+									key={blog.id}
+									blog={blog}
+									handleLike={handleLike}
+									handleRemove={handleRemove}
+								/>
+							)}
+						</Route>
+					</Switch>
 				</div>
-			</Route>
-		</Switch>
+			}
+		</>
 	)
 }
 

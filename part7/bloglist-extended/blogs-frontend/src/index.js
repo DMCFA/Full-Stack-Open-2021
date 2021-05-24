@@ -4,9 +4,12 @@ import App from './App'
 import store from './store'
 
 import { Provider } from 'react-redux'
+import { BrowserRouter as Browser } from 'react-router-dom'
 
 ReactDOM.render(
-	<Provider store={store}>
-		<App />
-	</Provider>,
+	<Browser>
+		<Provider store={store}>
+			<App />
+		</Provider>
+	</Browser>,
 	document.getElementById('root'))

@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import NewBlog from './components/NewBlog'
+import Users from './components/Users'
 
-import loginService from './services/login'
 import storage from './utils/storage'
 
 import { addNotification } from './reducers/notificationReducer'
 import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setUser, logoutUser } from './reducers/userReducer'
+import { initializeUsers } from './reducers/usersReducer'
+
+import { Switch, Route } from 'react-router-dom'
 
 const App = () => {
 	const dispatch = useDispatch()
 
 	const blogs = useSelector(state => state.blogs)
 	const user = useSelector(state => state.user)
-	const [username, setUsername] = useState('')
-	const [password, setPassword] = useState('')
+	const users = useSelector(state => state.users)
 	const notification = useSelector(state => state.notification)
 
 	const blogFormRef = React.createRef()
@@ -30,26 +32,11 @@ const App = () => {
 
 	useEffect(() => {
 		dispatch(initializeBlogs())
+		dispatch(initializeUsers())
 	}, [dispatch])
 
 	const notifyWith = (message, type='success') => {
 		dispatch(addNotification(message, type))
-	}
-
-	const handleLogin = async (event) => {
-		event.preventDefault()
-		try {
-			const user = await loginService.login({
-				username, password
-			})
-			setUsername('')
-			setPassword('')
-			dispatch(setUser(user))
-			notifyWith(`${user.name} welcome back!`)
-			storage.saveUser(user)
-		} catch(exception) {
-			notifyWith('wrong username/password', 'error')
-		}
 	}
 
 	const handleLike = async (id) => {
@@ -71,61 +58,45 @@ const App = () => {
 		storage.logoutUser()
 	}
 
-	if ( !user ) {
-		return (
-			<div>
-				<h2>login to application</h2>
-
-				<Notification notification={notification} />
-
-				<form onSubmit={handleLogin}>
-					<div>
-            username
-						<input
-							id='username'
-							value={username}
-							onChange={({ target }) => setUsername(target.value)}
-						/>
-					</div>
-					<div>
-            password
-						<input
-							id='password'
-							value={password}
-							onChange={({ target }) => setPassword(target.value)}
-						/>
-					</div>
-					<button id='login'>login</button>
-				</form>
-			</div>
-		)
-	}
-
 	const byLikes = (b1, b2) => b2.likes - b1.likes
 
 	return (
-		<div>
-			<h2>blogs</h2>
 
-			<Notification notification={notification} />
+		<Switch>
 
-			<p>
-				{user.name} logged in <button onClick={handleLogout}>logout</button>
-			</p>
+			<Route path='/users'>
+				<h2>blogs</h2>
+				<p>
+					{user.name} logged in <button onClick={handleLogout}>logout</button>
+				</p>
+				<Users users={users} />
+			</Route>
 
-			<Togglable buttonLabel='create new blog'  ref={blogFormRef}>
-				<NewBlog notifyWith={notifyWith} />
-			</Togglable>
+			<Route path='/'>
+				<div>
+					<h2>blogs</h2>
 
-			{blogs.sort(byLikes).map(blog =>
-				<Blog
-					key={blog.id}
-					blog={blog}
-					handleLike={handleLike}
-					handleRemove={handleRemove}
-				/>
-			)}
-		</div>
+					<Notification notification={notification} />
+
+					<p>
+						{user.name} logged in <button onClick={handleLogout}>logout</button>
+					</p>
+
+					<Togglable buttonLabel='create new blog' ref={blogFormRef}>
+						<NewBlog notifyWith={notifyWith} />
+					</Togglable>
+
+					{blogs.sort(byLikes).map(blog =>
+						<Blog
+							key={blog.id}
+							blog={blog}
+							handleLike={handleLike}
+							handleRemove={handleRemove}
+						/>
+					)}
+				</div>
+			</Route>
+		</Switch>
 	)
 }
 

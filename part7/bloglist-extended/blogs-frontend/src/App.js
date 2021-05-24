@@ -5,12 +5,11 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import NewBlog from './components/NewBlog'
 
-import blogService from './services/blogs'
 import loginService from './services/login'
 import storage from './utils/storage'
 
 import { addNotification } from './reducers/notificationReducer'
-import { initializeBlogs } from './reducers/blogReducer'
+import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 
 const App = () => {
 	const dispatch = useDispatch()
@@ -56,16 +55,14 @@ const App = () => {
 	const handleLike = async (id) => {
 		const blogToLike = blogs.find(b => b.id === id)
 		const likedBlog = { ...blogToLike, likes: blogToLike.likes + 1, user: blogToLike.user.id }
-		await blogService.update(likedBlog)
-		return blogs.map(b => b.id === id ?  { ...blogToLike, likes: blogToLike.likes + 1 } : b)
+		dispatch(likeBlog(likedBlog))
 	}
 
 	const handleRemove = async (id) => {
 		const blogToRemove = blogs.find(b => b.id === id)
 		const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
 		if (ok) {
-			await blogService.remove(id)
-			return blogs.filter(b => b.id !== id)
+			dispatch(removeBlog(id))
 		}
 	}
 

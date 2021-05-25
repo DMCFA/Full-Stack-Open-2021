@@ -20,12 +20,10 @@ const Navbar = ({ user, handleLogout }) => {
 						: <Link to="/login">login</Link>
 					}
 				</Button>
-				<Button color="inherit">
-					{user
-						? <button onClick={handleLogout}>logout</button>
-						: <Link to="/login">login</Link>
-					}
-				</Button>
+				{user
+					? <button onClick={handleLogout}>logout</button>
+					: <Link to="/login">login</Link>
+				}
 			</Toolbar>
 		</AppBar>
 	)

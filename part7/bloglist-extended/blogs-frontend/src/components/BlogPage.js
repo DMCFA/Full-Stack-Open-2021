@@ -1,9 +1,18 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { addComment } from '../reducers/blogReducer'
 
 const BlogPage = ({ blog, handleLike, handleRemove, user }) => {
+	const dispatch = useDispatch()
 
 	if (!blog) {
 		return null
+	}
+
+	const comment = (e) => {
+		e.preventDefault()
+		dispatch(addComment(blog.id, e.target.comment.value))
+		e.target.comment.value = ''
 	}
 
 
@@ -25,11 +34,16 @@ const BlogPage = ({ blog, handleLike, handleRemove, user }) => {
 			</div>
 			<div>
 				<h3>Comments:</h3>
-				{
-					blog.comments.map( comment => (
+				<form onSubmit={comment}>
+					<input type="text" name="comment" />
+					<button type="submit">add comment</button>
+				</form>
+				<ul>
+					{blog.comments.map( comment => (
 						<li key={comment.id}>{comment}</li>
 					))
-				}
+					}
+				</ul>
 			</div>
 		</div>
 	)

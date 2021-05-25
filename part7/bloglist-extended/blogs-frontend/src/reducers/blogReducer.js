@@ -12,6 +12,9 @@ const blogReducer = (state = [], action) => {
 	case 'REMOVE_BLOG':
 		return state.filter(blog =>
 			blog.id !== action.data.id)
+	case 'ADD_COMMENT':
+		return state.map(comment =>
+			comment.id !== action.data.id ? comment : action.data)
 	default:
 		return state
 	}
@@ -57,6 +60,15 @@ export const removeBlog = (id) => {
 	}
 }
 
+export const addComment = (comment, id) => {
+	return async dispatch => {
+		const blogObject = await blogService.comment(id, comment)
+		dispatch({
+			type: 'ADD_COMMENT',
+			data: blogObject
+		})
+	}
+}
 
 
 export default blogReducer

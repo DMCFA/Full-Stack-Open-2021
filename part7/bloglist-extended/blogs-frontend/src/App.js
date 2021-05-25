@@ -8,6 +8,7 @@ import BlogPage from './components/BlogPage'
 import Users from './components/Users'
 import User from './components/User'
 import Login from './components/Login'
+import Navbar from './components/Navbar'
 
 import storage from './utils/storage'
 
@@ -16,10 +17,13 @@ import { initializeBlogs, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setUser, logoutUser } from './reducers/userReducer'
 import { initializeUsers } from './reducers/usersReducer'
 
-import { Switch, Route, useRouteMatch } from 'react-router-dom'
+import { Switch, Route, useRouteMatch, useHistory } from 'react-router-dom'
+
+import Container from '@material-ui/core/Container'
 
 const App = () => {
 	const dispatch = useDispatch()
+	const history = useHistory()
 
 	const blogs = useSelector(state => state.blogs)
 	const user = useSelector(state => state.user)
@@ -53,6 +57,7 @@ const App = () => {
 		const ok = window.confirm(`Remove blog ${blogToRemove.title} by ${blogToRemove.author}`)
 		if (ok) {
 			dispatch(removeBlog(id))
+			history.push('/')
 		}
 	}
 
@@ -78,42 +83,42 @@ const App = () => {
 			{!user ?
 				<Login notification={notification}
 				/> :
-				<div>
+				<Container>
+					<Navbar handleLogout={handleLogout} user={user} />
 					<div>
-						<h2>blogs</h2>
-						<Notification notification={notification} />
-						<p>
-							{user.name} logged in <button onClick={handleLogout}>logout</button>
-						</p>
+						<div>
+							<h2>blogs</h2>
+							<Notification notification={notification} />
+						</div>
+						<Switch>
+							<Route path='/users/:id'>
+								<User user={userId} />
+							</Route>
+
+							<Route path='/users'>
+								<Users users={users} />
+							</Route>
+							<Route path='/blogs/:id'>
+								<BlogPage blog={blogId}
+									user = {user}
+									handleLike = {handleLike}
+									handleRemove = {handleRemove} />
+							</Route>
+							<Route path='/'>
+								<Togglable buttonLabel='create new blog' ref={blogFormRef}>
+									<NewBlog notifyWith={notifyWith} />
+								</Togglable>
+
+								{blogs.sort(byLikes).map(blog =>
+									<Blog
+										key={blog.id}
+										blog={blog}
+									/>
+								)}
+							</Route>
+						</Switch>
 					</div>
-					<Switch>
-						<Route path='/users/:id'>
-							<User user={userId} />
-						</Route>
-
-						<Route path='/users'>
-							<Users users={users} />
-						</Route>
-						<Route path='/blogs/:id'>
-							<BlogPage blog={blogId}
-								user = {user}
-								handleLike = {handleLike}
-								handleRemove = {handleRemove} />
-						</Route>
-						<Route path='/'>
-							<Togglable buttonLabel='create new blog' ref={blogFormRef}>
-								<NewBlog notifyWith={notifyWith} />
-							</Togglable>
-
-							{blogs.sort(byLikes).map(blog =>
-								<Blog
-									key={blog.id}
-									blog={blog}
-								/>
-							)}
-						</Route>
-					</Switch>
-				</div>
+				</Container>
 			}
 		</>
 	)

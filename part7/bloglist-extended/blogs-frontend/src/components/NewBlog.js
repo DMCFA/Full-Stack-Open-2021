@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { newBlog } from '../reducers/blogReducer'
-import { Button } from '@material-ui/core'
+import { Button, TextField } from '@material-ui/core'
 
 const NewBlog = ({ notifyWith }) => {
 	const dispatch = useDispatch()
@@ -27,24 +27,21 @@ const NewBlog = ({ notifyWith }) => {
 			<h2>create new</h2>
 			<form onSubmit={handleNewBlog}>
 				<div>
-          author
-					<input
+					<TextField label='author'
 						id='author'
 						value={author}
 						onChange={({ target }) => setAuthor(target.value)}
 					/>
 				</div>
 				<div>
-          title
-					<input
+					<TextField label='title'
 						id='title'
 						value={title}
 						onChange={({ target }) => setTitle(target.value)}
 					/>
 				</div>
 				<div>
-          url
-					<input
+					<TextField label='url'
 						id='url'
 						value={url}
 						onChange={({ target }) => setUrl(target.value)}

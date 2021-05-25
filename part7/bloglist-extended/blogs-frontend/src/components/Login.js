@@ -24,18 +24,13 @@ const Login = () => {
 
 			<form onSubmit={handleLogin}>
 				<div>
-					<TextField label='username' />
-					<input
-						id='username'
-						value={username}
+					<TextField
+						label='username' id='username' value={username}
 						onChange={({ target }) => setUsername(target.value)}
 					/>
 				</div>
 				<div>
-					<TextField label='password' />
-					<input
-						id='password'
-						value={password}
+					<TextField label='password' id='password' value={password}
 						onChange={({ target }) => setPassword(target.value)}
 					/>
 				</div>

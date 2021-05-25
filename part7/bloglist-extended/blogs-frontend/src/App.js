@@ -4,6 +4,7 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import NewBlog from './components/NewBlog'
+import BlogPage from './components/BlogPage'
 import Users from './components/Users'
 import User from './components/User'
 import Login from './components/Login'
@@ -65,6 +66,11 @@ const App = () => {
 		? users.find(user => user.id === findUser.params.id)
 		: null
 
+	const findBlog = useRouteMatch('/blogs/:id')
+	const blogId = findBlog
+		? blogs.find(blog => blog.id === findBlog.params.id)
+		: null
+
 	const byLikes = (b1, b2) => b2.likes - b1.likes
 
 	return (
@@ -88,7 +94,12 @@ const App = () => {
 						<Route path='/users'>
 							<Users users={users} />
 						</Route>
-
+						<Route path='/blogs/:id'>
+							<BlogPage blog={blogId}
+								user = {user}
+								handleLike = {handleLike}
+								handleRemove = {handleRemove} />
+						</Route>
 						<Route path='/'>
 							<Togglable buttonLabel='create new blog' ref={blogFormRef}>
 								<NewBlog notifyWith={notifyWith} />
@@ -98,8 +109,6 @@ const App = () => {
 								<Blog
 									key={blog.id}
 									blog={blog}
-									handleLike={handleLike}
-									handleRemove={handleRemove}
 								/>
 							)}
 						</Route>

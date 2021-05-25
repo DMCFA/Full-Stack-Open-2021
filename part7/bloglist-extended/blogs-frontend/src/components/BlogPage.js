@@ -23,6 +23,14 @@ const BlogPage = ({ blog, handleLike, handleRemove, user }) => {
 				{user.username === blog.user.username &&
                         <button onClick={() => handleRemove(blog.id)}>remove</button>}
 			</div>
+			<div>
+				<h3>Comments:</h3>
+				{
+					blog.comments.map( comment => (
+						<li key={comment.id}>{comment}</li>
+					))
+				}
+			</div>
 		</div>
 	)
 }

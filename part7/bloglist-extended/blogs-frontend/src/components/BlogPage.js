@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { addComment } from '../reducers/blogReducer'
+import { Button } from '@material-ui/core'
 
 const BlogPage = ({ blog, handleLike, handleRemove, user }) => {
 	const dispatch = useDispatch()
@@ -25,18 +26,20 @@ const BlogPage = ({ blog, handleLike, handleRemove, user }) => {
 				<a href=''>{blog.url}</a>
 				<br />
 				{blog.likes} times
-				<button onClick={() => handleLike(blog.id)}>like</button>
+				<Button color="inherit" onClick={() => handleLike(blog.id)}>
+					like
+				</Button>
 			</div>
 			<div>
                 added by {blog.user.name}
 				{user.username === blog.user.username &&
-                        <button onClick={() => handleRemove(blog.id)}>remove</button>}
+                        <Button color="inherit" onClick={() => handleRemove(blog.id)}>remove</Button>}
 			</div>
 			<div>
 				<h3>Comments:</h3>
 				<form onSubmit={comment}>
 					<input type="text" name="comment" />
-					<button type="submit">add comment</button>
+					<Button color="inherit" type="submit">add comment</Button>
 				</form>
 				<ul>
 					{blog.comments.map( comment => (

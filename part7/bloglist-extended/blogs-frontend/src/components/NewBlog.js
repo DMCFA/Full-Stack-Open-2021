@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { newBlog } from '../reducers/blogReducer'
+import { Button } from '@material-ui/core'
 
 const NewBlog = ({ notifyWith }) => {
 	const dispatch = useDispatch()
@@ -49,7 +50,7 @@ const NewBlog = ({ notifyWith }) => {
 						onChange={({ target }) => setUrl(target.value)}
 					/>
 				</div>
-				<button id="create">create</button>
+				<Button color="inherit" id="create">create</Button>
 			</form>
 		</div>
 	)

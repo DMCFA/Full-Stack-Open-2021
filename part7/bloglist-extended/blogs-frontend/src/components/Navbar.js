@@ -21,7 +21,7 @@ const Navbar = ({ user, handleLogout }) => {
 					}
 				</Button>
 				{user
-					? <button onClick={handleLogout}>logout</button>
+					? <Button color="inherit" onClick={handleLogout}>logout</Button>
 					: <Link to="/login">login</Link>
 				}
 			</Toolbar>

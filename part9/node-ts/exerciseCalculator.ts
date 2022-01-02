@@ -70,5 +70,7 @@ function calculateExercises(hours: number[], target: number): exerciseCalc {
     average: average,
   };
 }
+const hours: number[] = Array(process.argv[2]);
+const target: number = Number(process.argv[3]);
 
-calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2);
+calculateExercises(hours, target);
